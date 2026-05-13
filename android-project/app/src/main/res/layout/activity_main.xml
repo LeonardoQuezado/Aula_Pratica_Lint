@@ -116,7 +116,7 @@
             android:layout_height="48dp"
             android:src="@android:drawable/ic_menu_help"
             android:layout_gravity="end"
-            android:background="?attr/selectableItemBackgroundBorderless" />
+            android:background="@android:color/transparent" />
 
     </LinearLayout>
 </ScrollView>
