@@ -1,0 +1,6 @@
+reports/*
+!reports/.gitkeep
+android-project/.gradle
+android-project/build
+android-project/app/build
+.git
