@@ -1,6 +1,6 @@
 FROM eclipse-temurin:17-jdk-jammy
 
-RUN apt-get update && apt-get install -y wget unzip && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y wget unzip python3 && rm -rf /var/lib/apt/lists/*
 
 # Gradle 8.7
 ENV GRADLE_VERSION=8.7
@@ -30,5 +30,6 @@ RUN cd /template && gradle lintDebug --no-daemon 2>&1 | tail -3 || true
 
 WORKDIR /project
 COPY entrypoint.sh /entrypoint.sh
+COPY generate_dashboard.py /generate_dashboard.py
 RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]

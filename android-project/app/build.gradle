@@ -23,6 +23,7 @@ android {
 
     lint {
         htmlReport = true
+        xmlReport = true
         abortOnError = false
         checkAllWarnings = true
         warningsAsErrors = false
