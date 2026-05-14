@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-╔══════════════════════════════════════════════════════════════╗
-║  AULA PRÁTICA — Android Lint para Acessibilidade             ║
-║  Este layout contém 5 problemas intencionais.                ║
-║  Tarefa: identifique-os no relatório e corrija ao menos 2.   ║
-╚══════════════════════════════════════════════════════════════╝
--->
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -18,7 +11,6 @@
         android:orientation="vertical"
         android:padding="24dp">
 
-        <!-- Cabeçalho -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,12 +20,6 @@
             android:textColor="#212121"
             android:layout_marginBottom="24dp" />
 
-        <!-- ══════════════════════════════════════════════════════════
-             ISSUE 1  |  ContentDescription  |  severidade: ERROR
-             ImageView informativa sem contentDescription.
-             Leitores de tela (TalkBack) não conseguem descrever
-             a imagem para usuários com deficiência visual.
-             ══════════════════════════════════════════════════════════ -->
         <ImageView
             android:id="@+id/imgPerfil"
             android:layout_width="96dp"
@@ -42,12 +28,6 @@
             android:layout_gravity="center"
             android:layout_marginBottom="24dp" />
 
-        <!-- ══════════════════════════════════════════════════════════
-             ISSUE 2  |  LabelFor  |  severidade: WARNING
-             TextView age como rótulo do campo abaixo, mas não possui
-             android:labelFor="@id/editNome". O TalkBack não consegue
-             associar o rótulo ao campo de entrada correspondente.
-             ══════════════════════════════════════════════════════════ -->
         <TextView
             android:id="@+id/labelNome"
             android:layout_width="wrap_content"
@@ -64,11 +44,6 @@
             android:inputType="textPersonName"
             android:layout_marginBottom="16dp" />
 
-        <!-- ══════════════════════════════════════════════════════════
-             ISSUE 3  |  LabelFor  |  severidade: WARNING
-             Mesmo problema: rótulo sem android:labelFor para o campo
-             de e-mail. Padrão a ser identificado e corrigido.
-             ══════════════════════════════════════════════════════════ -->
         <TextView
             android:id="@+id/labelEmail"
             android:layout_width="wrap_content"
@@ -85,12 +60,6 @@
             android:inputType="textEmailAddress"
             android:layout_marginBottom="24dp" />
 
-        <!-- ══════════════════════════════════════════════════════════
-             ISSUE 4  |  KeyboardInaccessibleWidget  |  severidade: WARNING
-             TextView usado como botão com android:clickable="true",
-             mas sem android:focusable="true". Usuários de teclado
-             ou d-pad não conseguem navegar até este elemento.
-             ══════════════════════════════════════════════════════════ -->
         <TextView
             android:id="@+id/btnEnviar"
             android:layout_width="match_parent"
@@ -104,12 +73,6 @@
             android:textStyle="bold"
             android:layout_marginBottom="16dp" />
 
-        <!-- ══════════════════════════════════════════════════════════
-             ISSUE 5  |  ContentDescription  |  severidade: ERROR
-             ImageButton sem contentDescription. Leitores de tela
-             anunciam apenas "botão sem rótulo", sem contexto útil
-             para o usuário.
-             ══════════════════════════════════════════════════════════ -->
         <ImageButton
             android:id="@+id/btnAjuda"
             android:layout_width="48dp"
