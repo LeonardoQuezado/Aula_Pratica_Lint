@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Lint Prática</string>
-    <string name="title_cadastro">Cadastro de Usuário</string>
-    <string name="label_nome">Nome completo</string>
-    <string name="hint_nome">Ex.: Maria Silva</string>
-    <string name="label_email">E-mail</string>
-    <string name="hint_email">Ex.: maria@email.com</string>
-    <string name="action_enviar">Enviar</string>
 </resources>

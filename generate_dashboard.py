@@ -9,6 +9,7 @@ ACCESSIBILITY_IDS = {
     'ContentDescription', 'KeyboardInaccessibleWidget', 'LabelFor',
     'ClickableViewAccessibility', 'TouchTargetSizeAtf', 'ImageContrastAtf',
     'TextContrastAtf', 'SpeakableTextPresentAtf', 'DuplicateSpeakableItems',
+    'ComposableNaming', 'SemanticsFocusable',
 }
 
 PT = {
@@ -79,6 +80,13 @@ PT = {
         'tempo de execução.',
         'Adicione <code>@NonNull</code> ou <code>@Nullable</code> ao parâmetro ou retorno '
         'do método.',
+    ),
+    'ClickableViewAccessibility': (
+        'Elemento Clicável sem Acessibilidade',
+        'Elementos com <code>Modifier.clickable</code> devem declarar uma ação semântica '
+        'para que leitores de tela consigam anunciar e ativar o elemento corretamente.',
+        'Adicione <code>Modifier.semantics { role = Role.Button; onClick(label = "descrição") { true } }</code> '
+        'ao elemento clicável.',
     ),
     'Overdraw': (
         'Sobreposição de Pintura (Overdraw)',
