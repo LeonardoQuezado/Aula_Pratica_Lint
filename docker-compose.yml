@@ -5,6 +5,7 @@ services:
       - "8080:8080"
     volumes:
       - ./android-project:/project
+      - ./reports:/reports
       - gradle-cache:/root/.gradle
 
 volumes:
