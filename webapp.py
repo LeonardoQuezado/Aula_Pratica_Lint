@@ -1,45 +1,35 @@
 #!/usr/bin/env python3
-"""Interface web para rodar o Android Lint sobre código gerado por IA."""
+"""Interface web para rodar o Android Lint sobre código XML gerado por IA."""
 from flask import Flask, request, redirect
 import subprocess
 import os
-import re
 
 app = Flask(__name__)
 
 PROJECT_DIR  = '/project'
-SCREEN_FILE  = os.path.join(PROJECT_DIR, 'app/src/main/java/com/example/lintpratica/GeneratedScreen.kt')
+LAYOUT_FILE  = os.path.join(PROJECT_DIR, 'app/src/main/res/layout/generated_layout.xml')
 XML_REPORT   = os.path.join(PROJECT_DIR, 'app/build/reports/lint-results-debug.xml')
 HTML_REPORT  = '/reports/index.html'
 
 PLACEHOLDER = """\
-package com.example.lintpratica
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="32dp">
 
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cole o código XML gerado pelo GPT na interface web"
+        android:textSize="16sp"
+        android:gravity="center" />
 
-@Composable
-fun GeneratedScreen() {
-    Text(text = "Cole aqui o código gerado pelo GPT EstudoAcessibilidade")
-}
+</LinearLayout>
 """
-
-
-def prepare_code(raw: str) -> str:
-    """Ajusta o package e garante que GeneratedScreen() existe."""
-    if re.search(r'^\s*package\s+\S+', raw, re.MULTILINE):
-        code = re.sub(r'^\s*package\s+\S+', 'package com.example.lintpratica', raw, count=1, flags=re.MULTILINE)
-    else:
-        code = 'package com.example.lintpratica\n\n' + raw
-
-    if 'fun GeneratedScreen' not in code:
-        match = re.search(r'@Composable\s+fun\s+(\w+)\s*\(', code)
-        if match:
-            main_fn = match.group(1)
-            code += f'\n\n@Composable\nfun GeneratedScreen() {{ {main_fn}() }}\n'
-
-    return code
-
 
 INDEX_HTML = """<!DOCTYPE html>
 <html lang="pt-BR">
@@ -57,10 +47,9 @@ header .sub{color:#8b949e;font-size:12px;margin-top:3px}
 main{flex:1;display:flex;flex-direction:column;align-items:center;padding:36px 24px}
 .card{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:32px;width:100%;max-width:880px}
 .card h2{font-size:15px;font-weight:600;color:#f0f6fc;margin-bottom:8px}
-.card p{color:#8b949e;font-size:13px;margin-bottom:20px;line-height:1.6}
 .steps{background:#0d1117;border:1px solid #30363d;border-radius:6px;padding:16px 20px;margin-bottom:22px;font-size:13px;line-height:2.2}
 .steps div span{background:#1f6feb;color:#fff;font-weight:700;font-size:11px;padding:2px 7px;border-radius:4px;margin-right:10px}
-textarea{width:100%;height:360px;background:#010409;border:1px solid #30363d;border-radius:6px;color:#e6edf3;font-family:'Consolas','Monaco',monospace;font-size:13px;padding:14px;resize:vertical;outline:none;transition:border-color .2s;line-height:1.5}
+textarea{width:100%;height:380px;background:#010409;border:1px solid #30363d;border-radius:6px;color:#e6edf3;font-family:'Consolas','Monaco',monospace;font-size:13px;padding:14px;resize:vertical;outline:none;transition:border-color .2s;line-height:1.5}
 textarea:focus{border-color:#1f6feb}
 textarea::placeholder{color:#484f58}
 .btn{display:block;width:100%;margin-top:14px;padding:13px;background:#238636;color:#fff;font-size:15px;font-weight:600;border:none;border-radius:6px;cursor:pointer;transition:background .2s}
@@ -76,21 +65,21 @@ footer{text-align:center;color:#8b949e;font-size:11px;padding:20px;border-top:1p
 <header>
   <div>
     <h1>Android Lint — Analisador de Acessibilidade</h1>
-    <div class="sub">Cole o código gerado pelo GPT e receba o relatório de acessibilidade</div>
+    <div class="sub">Cole o layout XML gerado pelo GPT e receba o relatório de acessibilidade</div>
   </div>
-  <span class="tag">Jetpack Compose · Material 3</span>
+  <span class="tag">Android XML Layout</span>
 </header>
 <main>
   <div class="card">
     <h2>Como usar</h2>
     <div class="steps">
-      <div><span>1</span>Acesse o GPT EstudoAcessibilidade e gere o código de uma tela</div>
-      <div><span>2</span>Copie todo o código gerado</div>
+      <div><span>1</span>Acesse o GPT EstudoAcessibilidade e gere o código XML de uma tela</div>
+      <div><span>2</span>Copie todo o código XML gerado</div>
       <div><span>3</span>Cole no campo abaixo e clique em Analisar</div>
       <div><span>4</span>Aguarde cerca de 30 segundos e veja o relatório</div>
     </div>
-    <form method="POST" action="/analisar" onsubmit="startLoading()">
-      <textarea name="code" placeholder="Cole aqui o código Kotlin gerado pelo GPT EstudoAcessibilidade..."></textarea>
+    <form method="POST" action="/analisar" onsubmit="return startLoading()">
+      <textarea name="code" placeholder="Cole aqui o layout XML gerado pelo GPT EstudoAcessibilidade..."></textarea>
       <button class="btn" type="submit" id="btn">Analisar com Lint</button>
       <div class="loading" id="loading">
         <span class="spinner"></span>Rodando o Lint, aguarde cerca de 30 segundos...
@@ -101,12 +90,12 @@ footer{text-align:center;color:#8b949e;font-size:11px;padding:20px;border-top:1p
 <footer>Aula Prática · Android Lint para Acessibilidade</footer>
 <script>
 function startLoading(){
-  var btn=document.getElementById('btn');
   var code=document.querySelector('textarea[name=code]').value.trim();
-  if(!code){alert('Cole o código antes de analisar.');return false;}
-  btn.disabled=true;
-  btn.textContent='Analisando...';
+  if(!code){alert('Cole o código XML antes de analisar.');return false;}
+  document.getElementById('btn').disabled=true;
+  document.getElementById('btn').textContent='Analisando...';
   document.getElementById('loading').style.display='block';
+  return true;
 }
 </script>
 </body>
@@ -129,7 +118,7 @@ a:hover{{border-color:#58a6ff}}
 </head>
 <body>
 <h2>Erro de compilação</h2>
-<p>O código colado não compilou. Verifique se o código está completo, se os imports estão corretos e tente novamente.</p>
+<p>O código XML colado não compilou. Verifique se o XML está bem formado e tente novamente.</p>
 <pre>{output}</pre>
 <a href="/">← Voltar e tentar novamente</a>
 </body>
@@ -143,14 +132,12 @@ def index():
 
 @app.route('/analisar', methods=['POST'])
 def analisar():
-    raw = request.form.get('code', '').strip()
-    if not raw:
+    code = request.form.get('code', '').strip()
+    if not code:
         return redirect('/')
 
-    code = prepare_code(raw)
-
-    os.makedirs(os.path.dirname(SCREEN_FILE), exist_ok=True)
-    with open(SCREEN_FILE, 'w', encoding='utf-8') as f:
+    os.makedirs(os.path.dirname(LAYOUT_FILE), exist_ok=True)
+    with open(LAYOUT_FILE, 'w', encoding='utf-8') as f:
         f.write(code)
 
     result = subprocess.run(
@@ -181,8 +168,8 @@ def relatorio():
 
 
 if __name__ == '__main__':
-    if not os.path.exists(SCREEN_FILE):
-        os.makedirs(os.path.dirname(SCREEN_FILE), exist_ok=True)
-        with open(SCREEN_FILE, 'w') as f:
+    if not os.path.exists(LAYOUT_FILE):
+        os.makedirs(os.path.dirname(LAYOUT_FILE), exist_ok=True)
+        with open(LAYOUT_FILE, 'w') as f:
             f.write(PLACEHOLDER)
     app.run(host='0.0.0.0', port=8080, debug=False)

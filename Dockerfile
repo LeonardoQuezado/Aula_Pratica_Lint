@@ -25,7 +25,7 @@ ENV PATH="${PATH}:${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin:${ANDROID_SDK_ROO
 RUN yes | sdkmanager --licenses > /dev/null 2>&1 && \
     sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
-# Pre-cache dependências Gradle + Compose
+# Pre-cache dependências
 COPY android-project/ /template/
 RUN cd /template && gradle lintDebug --no-daemon 2>&1 | tail -5 || true
 
