@@ -1,6 +1,7 @@
 FROM eclipse-temurin:17-jdk-jammy
 
-RUN apt-get update && apt-get install -y wget unzip python3 && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y wget unzip python3 python3-pip && rm -rf /var/lib/apt/lists/*
+RUN pip3 install flask --break-system-packages 2>/dev/null || pip3 install flask
 
 # Gradle 8.7
 ENV GRADLE_VERSION=8.7
@@ -9,7 +10,7 @@ RUN wget -q https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-b
     rm /tmp/gradle.zip
 ENV PATH="/opt/gradle-${GRADLE_VERSION}/bin:${PATH}"
 
-# Android SDK command-line tools
+# Android SDK
 ENV ANDROID_SDK_ROOT=/opt/android-sdk
 ENV ANDROID_HOME=/opt/android-sdk
 RUN mkdir -p ${ANDROID_SDK_ROOT}/cmdline-tools && \
@@ -24,12 +25,12 @@ ENV PATH="${PATH}:${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin:${ANDROID_SDK_ROO
 RUN yes | sdkmanager --licenses > /dev/null 2>&1 && \
     sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
-# Pre-cache AGP + Lint dependencies during image build
+# Pre-cache dependências Gradle + Compose
 COPY android-project/ /template/
-RUN cd /template && gradle lintDebug --no-daemon 2>&1 | tail -3 || true
+RUN cd /template && gradle lintDebug --no-daemon 2>&1 | tail -5 || true
 
 WORKDIR /project
-COPY entrypoint.sh /entrypoint.sh
 COPY generate_dashboard.py /generate_dashboard.py
-RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
+COPY webapp.py /webapp.py
+
+CMD ["python3", "/webapp.py"]

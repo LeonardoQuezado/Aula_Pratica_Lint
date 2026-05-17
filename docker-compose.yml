@@ -1,18 +1,11 @@
 services:
-
-  lint:
+  web:
     build: .
+    ports:
+      - "8080:8080"
     volumes:
       - ./android-project:/project
-      - ./reports:/reports
       - gradle-cache:/root/.gradle
-
-  web:
-    image: nginx:alpine
-    ports:
-      - "8080:80"
-    volumes:
-      - ./reports:/usr/share/nginx/html:ro
 
 volumes:
   gradle-cache:
