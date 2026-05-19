@@ -140,6 +140,9 @@ def analisar():
     with open(LAYOUT_FILE, 'w', encoding='utf-8') as f:
         f.write(code)
 
+    if os.path.exists(XML_REPORT):
+        os.remove(XML_REPORT)
+
     result = subprocess.run(
         ['gradle', 'lintDebug', '--no-daemon'],
         cwd=PROJECT_DIR,
