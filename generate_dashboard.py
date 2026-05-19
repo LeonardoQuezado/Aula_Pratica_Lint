@@ -279,10 +279,7 @@ footer{{text-align:center;color:#8b949e;font-size:11px;padding:20px;border-top:1
     <h1>Android Lint — Relatório de Acessibilidade</h1>
     <div class="sub">Gerado em {now}</div>
   </div>
-  <div style="display:flex;align-items:center;gap:10px">
-    <span class="agp-tag">AGP 8.3.0</span>
-    <button class="btn-pdf" onclick="window.print()">⬇ Baixar PDF</button>
-  </div>
+  <span class="agp-tag">AGP 8.3.0</span>
 </header>
 
 <div class="summary">
@@ -290,6 +287,10 @@ footer{{text-align:center;color:#8b949e;font-size:11px;padding:20px;border-top:1
   <div class="scard s-a11y"><div class="num">{n_a11y}</div><div class="lbl">Acessibilidade</div></div>
   <div class="scard s-err"><div class="num">{n_errors}</div><div class="lbl">Erros</div></div>
   <div class="scard s-warn"><div class="num">{n_warn}</div><div class="lbl">Avisos</div></div>
+</div>
+
+<div style="max-width:1160px;margin:0 auto;padding:0 32px 8px;text-align:right" class="no-print">
+  <button class="btn-pdf" onclick="window.print()">⬇ Baixar PDF</button>
 </div>
 
 <main>
