@@ -233,6 +233,9 @@ header{{background:#161b22;border-bottom:1px solid #30363d;padding:18px 32px;dis
 header h1{{font-size:18px;font-weight:600;color:#f0f6fc}}
 header .sub{{color:#8b949e;font-size:12px;margin-top:3px}}
 .agp-tag{{background:#1f6feb22;color:#58a6ff;border:1px solid #1f6feb55;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}}
+.btn-pdf{{background:#238636;color:#fff;border:none;padding:7px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block}}
+.btn-pdf:hover{{background:#2ea043}}
+@media print{{.btn-pdf,.no-print{{display:none!important}}body{{background:#fff;color:#000}}.card,.scard{{border:1px solid #ccc!important;background:#fff!important}}.snippet{{background:#f6f8fa!important;color:#000!important}}code{{background:#f0f0f0!important;color:#000!important}}.issue-name,.sec-header h2,header h1{{color:#000!important}}.sub,.block-title,.lbl{{color:#555!important}}.a11y-section .sec-header h2{{color:#c00!important}}.badge{{border:1px solid #999!important}}}}
 .summary{{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:24px 32px;max-width:1160px;margin:0 auto}}
 .scard{{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:18px;text-align:center}}
 .scard .num{{font-size:38px;font-weight:700;line-height:1;margin-bottom:5px}}
@@ -276,7 +279,10 @@ footer{{text-align:center;color:#8b949e;font-size:11px;padding:20px;border-top:1
     <h1>Android Lint — Relatório de Acessibilidade</h1>
     <div class="sub">Gerado em {now}</div>
   </div>
-  <span class="agp-tag">AGP 8.3.0</span>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span class="agp-tag">AGP 8.3.0</span>
+    <button class="btn-pdf" onclick="window.print()">⬇ Baixar PDF</button>
+  </div>
 </header>
 
 <div class="summary">
