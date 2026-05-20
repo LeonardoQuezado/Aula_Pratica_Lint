@@ -195,6 +195,11 @@ def analisar():
     if os.path.exists(XML_REPORT):
         os.remove(XML_REPORT)
 
+    blame_dir = os.path.join(PROJECT_DIR, 'app/build/intermediates/merged_res_blame_folder')
+    if os.path.exists(blame_dir):
+        import shutil
+        shutil.rmtree(blame_dir, ignore_errors=True)
+
     result = subprocess.run(
         ['gradle', 'lintDebug', '--no-daemon'],
         cwd=PROJECT_DIR,
