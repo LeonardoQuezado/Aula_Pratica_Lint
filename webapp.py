@@ -2,7 +2,58 @@
 """Interface web para rodar o Android Lint sobre código XML gerado por IA."""
 from flask import Flask, request, redirect
 import subprocess
+import re
 import os
+
+KNOWN_DRAWABLES = {
+    'ic_account','ic_add','ic_arrow_down','ic_arrow_left','ic_arrow_right','ic_arrow_up',
+    'ic_back','ic_bank','ic_barcode','ic_bell','ic_calendar','ic_card','ic_cards','ic_cash',
+    'ic_chat','ic_check','ic_close','ic_config','ic_copy','ic_credit_card','ic_debit_card',
+    'ic_delete','ic_deposit','ic_edit','ic_extract','ic_eye','ic_eye_off','ic_favorite',
+    'ic_filter','ic_help','ic_history','ic_home','ic_info','ic_insurance','ic_invest',
+    'ic_investment','ic_loan','ic_loans','ic_lock','ic_market','ic_menu','ic_money',
+    'ic_more','ic_notification','ic_payment','ic_person','ic_pix','ic_profile','ic_qr',
+    'ic_qr_code','ic_receive','ic_refresh','ic_search','ic_security','ic_send',
+    'ic_settings','ic_shopping','ic_sort','ic_star','ic_statement','ic_support',
+    'ic_transfer','ic_transfer_money','ic_visibility','ic_visibility_off','ic_withdraw',
+}
+
+STRING_MAP = {
+    'app_name':'Lint Prática','profile_photo':'Foto do perfil','edit_profile':'Editar perfil',
+    'save_changes':'Salvar alterações','save':'Salvar','phone':'Telefone','about_me':'Sobre mim',
+    'personal_information':'Informações pessoais','email':'E-mail','name':'Nome',
+    'password':'Senha','login':'Entrar','register':'Cadastrar','username':'Usuário',
+    'confirm_password':'Confirmar senha','forgot_password':'Esqueceu a senha?',
+    'notifications':'Notificações','settings':'Configurações','search':'Buscar',
+    'home':'Início','profile':'Perfil','logout':'Sair','cancel':'Cancelar',
+    'confirm':'Confirmar','back':'Voltar','next':'Próximo','finish':'Concluir',
+    'submit':'Enviar','close':'Fechar','delete':'Excluir','edit':'Editar',
+    'add':'Adicionar','remove':'Remover','update':'Atualizar','send':'Enviar',
+    'receive':'Receber','transfer':'Transferir','payment':'Pagamento','balance':'Saldo',
+    'history':'Histórico','help':'Ajuda','about':'Sobre','contact':'Contato',
+    'support':'Suporte','security':'Segurança','account':'Conta','address':'Endereço',
+    'mark_all_read':'Marcar todas como lidas','no_notifications':'Nenhuma notificação',
+    'clear_all':'Limpar tudo','filter':'Filtrar','title':'Título','description':'Descrição',
+    'date':'Data','time':'Hora','amount':'Valor','total':'Total','status':'Status',
+    'welcome':'Bem-vindo','continue':'Continuar','loading':'Carregando',
+}
+
+def snake_to_label(name):
+    return name.replace('_', ' ').capitalize()
+
+def preprocess_xml(code):
+    def replace_string(m):
+        name = m.group(1)
+        return '"{}"'.format(STRING_MAP.get(name, snake_to_label(name)))
+
+    def replace_drawable(m):
+        name = m.group(1)
+        return '@drawable/{}'.format(name if name in KNOWN_DRAWABLES else 'ic_account')
+
+    code = re.sub(r'@string/(\w+)', replace_string, code)
+    code = re.sub(r'@drawable/(\w+)', replace_drawable, code)
+    code = re.sub(r'@mipmap/\w+', '@drawable/ic_account', code)
+    return code
 
 app = Flask(__name__)
 
@@ -136,6 +187,7 @@ def analisar():
     if not code:
         return redirect('/')
 
+    code = preprocess_xml(code)
     os.makedirs(os.path.dirname(LAYOUT_FILE), exist_ok=True)
     with open(LAYOUT_FILE, 'w', encoding='utf-8') as f:
         f.write(code)
