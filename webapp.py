@@ -44,7 +44,7 @@ def snake_to_label(name):
 def preprocess_xml(code):
     def replace_string(m):
         name = m.group(1)
-        return '"{}"'.format(STRING_MAP.get(name, snake_to_label(name)))
+        return STRING_MAP.get(name, snake_to_label(name))
 
     def replace_drawable(m):
         name = m.group(1)
